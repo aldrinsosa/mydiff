@@ -15,12 +15,12 @@ namespace mydiff
             string path = Directory.GetCurrentDirectory();
             string arg1 = args[0];
             string arg2 = args[1];
-            IEnumerable<string> firstFile;
-            IEnumerable<string> secondFile;
+            IEnumerable<string> firstFileE;
+            IEnumerable<string> secondFileE;
             
             try
             {
-                firstFile = File.ReadLines(string.Format("{0}/{1}", path, arg1));
+                firstFileE = File.ReadLines($"{path}/{arg1}");
             }
             catch (IOException e)
             {
@@ -29,7 +29,7 @@ namespace mydiff
             }
             try
             {
-                secondFile = File.ReadLines(string.Format("{0}/{1}", path, arg2));
+                secondFileE = File.ReadLines($"{path}/{arg2}");
             }
             catch (IOException e)
             {
@@ -37,15 +37,22 @@ namespace mydiff
                 return;
             }
             Console.WriteLine("First file\n");
-            foreach (string line in firstFile)
+
+            var firstFile = firstFileE as string[] ?? firstFileE.ToArray();
+            var secondFile = secondFileE as string[] ?? secondFileE.ToArray();
+            for (int i = 0; i < firstFile.Count(); i++)
             {
-                Console.WriteLine(line);
+                if (firstFile[i].Equals(secondFile[i]))
+                {
+                    Console.WriteLine($"     {firstFile[i]}");
+                }
+                else
+                {
+                    Console.WriteLine($" {i} - {firstFile[i]}");
+                    Console.WriteLine($" {i} + {secondFile[i]}");
+                }
             }
-            Console.WriteLine("\nSecond file\n");
-            foreach (string line in secondFile)
-            {
-                Console.WriteLine(line);
-            }
+            
         }
     }
 }
