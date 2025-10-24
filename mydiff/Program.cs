@@ -12,12 +12,14 @@ namespace mydiff
                 Console.WriteLine("Usage: mydiff <first_file> <second_file>");
                 return;
             }
+            //set address of the files
             string path = Directory.GetCurrentDirectory();
             string arg1 = args[0];
             string arg2 = args[1];
             IEnumerable<string> firstFileE;
             IEnumerable<string> secondFileE;
             
+            //read the files
             try
             {
                 firstFileE = File.ReadLines($"{path}/{arg1}");
@@ -36,23 +38,40 @@ namespace mydiff
                 Console.WriteLine(e.Message);
                 return;
             }
-            Console.WriteLine("First file\n");
 
-            var firstFile = firstFileE as string[] ?? firstFileE.ToArray();
-            var secondFile = secondFileE as string[] ?? secondFileE.ToArray();
-            for (int i = 0; i < firstFile.Count(); i++)
+            Dictionary<int, Line> linesFirst = new Dictionary<int, Line>();
+            Dictionary<int, Line> linesSecond = new Dictionary<int, Line>();
+            int idx = 1;
+            foreach (string line in firstFileE)
             {
-                if (firstFile[i].Equals(secondFile[i]))
+                Line l = new Line() {NumberLine = idx++, ContentLine = line};
+                linesFirst.Add(idx, l);
+            }
+            idx = 1;
+            foreach (string line in secondFileE)
+            {
+                Line l = new Line() {NumberLine = idx++, ContentLine = line};
+                linesSecond.Add(idx, l);
+            }
+            
+            foreach (var l in linesFirst)
+            {
+                if (linesSecond.ContainsKey(l.Key))
                 {
-                    Console.WriteLine($"     {firstFile[i]}");
+                    try
+                    {
+                        Console.WriteLine(linesSecond[l.Key].ContentLine);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($" {i} - {firstFile[i]}");
-                    Console.WriteLine($" {i} + {secondFile[i]}");
+                    System.Environment.Exit(0);
                 }
             }
-            
         }
     }
 }
