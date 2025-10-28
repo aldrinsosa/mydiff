@@ -39,38 +39,22 @@ namespace mydiff
                 return;
             }
 
-            Dictionary<int, Line> linesFirst = new Dictionary<int, Line>();
-            Dictionary<int, Line> linesSecond = new Dictionary<int, Line>();
-            int idx = 1;
+            int firstFileEnumCount = firstFileE.Count();
+            int  secondFileEnumCount = secondFileE.Count();
+            Line[,] lines = new Line[firstFileEnumCount,secondFileEnumCount];
+            Line [] linesFirst =  new Line[firstFileEnumCount];
+            Line [] linesSecond = new Line[secondFileEnumCount];
+            int idx = 0;
             foreach (string line in firstFileE)
             {
-                Line l = new Line() {NumberLine = idx++, ContentLine = line};
-                linesFirst.Add(idx, l);
+                Line l = new Line() {NumberLine = idx + 1, ContentLine = line};
+                linesFirst[idx++] = l;
             }
-            idx = 1;
+            idx = 0;
             foreach (string line in secondFileE)
             {
-                Line l = new Line() {NumberLine = idx++, ContentLine = line};
-                linesSecond.Add(idx, l);
-            }
-            
-            foreach (var l in linesFirst)
-            {
-                if (linesSecond.ContainsKey(l.Key))
-                {
-                    try
-                    {
-                        Console.WriteLine(linesSecond[l.Key].ContentLine);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
-                }
-                else
-                {
-                    System.Environment.Exit(0);
-                }
+                Line l = new Line() {NumberLine = idx + 1, ContentLine = line};
+                linesSecond[idx++] = l;
             }
         }
     }
