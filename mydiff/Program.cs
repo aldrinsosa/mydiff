@@ -76,6 +76,7 @@ namespace mydiff
             
             SetLcs(traceback, linesFirst, linesSecond);
             
+            PrintDiff(linesFirst, linesSecond);
             //TODO: Print the diff
         }
 
@@ -141,8 +142,34 @@ namespace mydiff
             {
                 linesFirst[t].IsLcs = true;
                 linesSecond[t].IsLcs = true;
-                Console.Write(linesFirst[t].ContentLine + " ");
-                Console.WriteLine(linesFirst[t].NumberLine + " ");
+            }
+        }
+
+        private static void PrintDiff(Line[] linesFirst, Line[] linesSecond)
+        {
+            Console.WriteLine("First file");
+            foreach (var line in linesFirst)
+            {
+                if (line.IsLcs)
+                {
+                    Console.WriteLine($"{line.NumberLine}   {line.ContentLine}");
+                }
+                else
+                {
+                    Console.WriteLine($"{line.NumberLine} - {line.ContentLine}");
+                }
+            }
+            Console.WriteLine("Second file");
+            foreach (var line in linesSecond)
+            {
+                if (line.IsLcs)
+                {
+                    Console.WriteLine($"{line.NumberLine}   {line.ContentLine}");
+                }
+                else
+                {
+                    Console.WriteLine($"{line.NumberLine} + {line.ContentLine}");
+                }
             }
         }
     }
