@@ -53,30 +53,30 @@ namespace mydiff
             
             int idx = 0;
             //create the empty string for the LCS
-            linesFirst[idx] = new Line() { NumberLine = idx++, ContentLine = "" };
+            linesFirst[idx] = new Line() { NumberLine = idx++, ContentLine = "", IsLcs = false};
             foreach (string line in firstFile)
             {
-                Line l = new Line() { NumberLine = idx + 1, ContentLine = line };
+                Line l = new Line() { NumberLine = idx + 1, ContentLine = line, IsLcs = false};
                 linesFirst[idx++] = l;
             }
 
             idx = 0;
             //create the empty string for the LCS
-            linesSecond[idx] = new Line() { NumberLine = idx++, ContentLine = "" };
+            linesSecond[idx] = new Line() { NumberLine = idx++, ContentLine = "", IsLcs = false};
             foreach (string line in secondFile)
             {
-                Line l = new Line() { NumberLine = idx + 1, ContentLine = line };
+                Line l = new Line() { NumberLine = idx + 1, ContentLine = line,  IsLcs = false};
                 linesSecond[idx++] = l;
             }
 
             //get the matrix with the length of the LCS
             int[,] lengthLcs = GetLengthLcs(linesFirst, linesSecond);
-            
-            //TODO: get the traceback
+
             int [] traceback = TracebackLcs(lengthLcs,  firstFileCount, secondFileCount);
             
-            //TODO: print the LCS
-            PrintLcs(traceback, linesFirst);
+            SetLcs(traceback, linesFirst, linesSecond);
+            
+            //TODO: Print the diff
         }
 
         private static int[,] GetLengthLcs(Line[] linesFirst, Line[] linesSecond)
@@ -135,11 +135,14 @@ namespace mydiff
             return traceback;
         }
 
-        private static void PrintLcs(int[] traceback, Line[] linesFirst)
+        private static void SetLcs(int[] traceback, Line[] linesFirst, Line[] linesSecond)
         {
             foreach (var t in traceback)
             {
-                Console.WriteLine(linesFirst[t].ContentLine + " ");
+                linesFirst[t].IsLcs = true;
+                linesSecond[t].IsLcs = true;
+                Console.Write(linesFirst[t].ContentLine + " ");
+                Console.WriteLine(linesFirst[t].NumberLine + " ");
             }
         }
     }
