@@ -71,6 +71,12 @@ namespace mydiff
 
             //get the matrix with the length of the LCS
             int[,] lengthLcs = GetLengthLcs(linesFirst, linesSecond);
+            
+            //TODO: get the traceback
+            int [] traceback = TracebackLcs(lengthLcs,  firstFileCount, secondFileCount);
+            
+            //TODO: print the LCS
+            
         }
 
         private static int[,] GetLengthLcs(Line[] linesFirst, Line[] linesSecond)
@@ -107,6 +113,26 @@ namespace mydiff
                 }
             }
             return lengthLcs;
+        }
+
+        private static int[] TracebackLcs(int[,] lengthLcs, int firstFileCount, int secondFileCount)
+        {
+            int[] traceback = new Int32[lengthLcs[firstFileCount - 1, secondFileCount -1]];
+            int actualLcs = 0;
+            int indexLcs = 0;
+            for (int i = 1; i < firstFileCount; i++)
+            {
+                for (int j = 1; j < secondFileCount; j++)
+                {
+                    if (lengthLcs[i, j] > actualLcs)
+                    {
+                        traceback[indexLcs++] = i;
+                        actualLcs = lengthLcs[i, j];
+                    }
+                }
+            }
+
+            return traceback;
         }
     }
 }
