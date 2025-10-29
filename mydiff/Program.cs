@@ -76,7 +76,7 @@ namespace mydiff
             int [] traceback = TracebackLcs(lengthLcs,  firstFileCount, secondFileCount);
             
             //TODO: print the LCS
-            
+            PrintLcs(traceback, linesFirst);
         }
 
         private static int[,] GetLengthLcs(Line[] linesFirst, Line[] linesSecond)
@@ -133,6 +133,14 @@ namespace mydiff
             }
 
             return traceback;
+        }
+
+        private static void PrintLcs(int[] traceback, Line[] linesFirst)
+        {
+            foreach (var t in traceback)
+            {
+                Console.WriteLine(linesFirst[t].ContentLine + " ");
+            }
         }
     }
 }
