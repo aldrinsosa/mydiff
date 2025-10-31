@@ -53,31 +53,30 @@ namespace mydiff
             
             int idx = 0;
             //create the empty string for the LCS
-            linesFirst[idx] = new Line() { NumberLine = idx++, ContentLine = "", IsLcs = false};
+            linesFirst[idx] = new Line() { NumberLine = idx++, ContentLine = "", };
             foreach (string line in firstFile)
             {
-                Line l = new Line() { NumberLine = idx + 1, ContentLine = line, IsLcs = false};
+                Line l = new Line() { NumberLine = idx + 1, ContentLine = line, IsLcs = false, IsFirst = true};
                 linesFirst[idx++] = l;
             }
 
             idx = 0;
             //create the empty string for the LCS
-            linesSecond[idx] = new Line() { NumberLine = idx++, ContentLine = "", IsLcs = false};
+            linesSecond[idx] = new Line() { NumberLine = idx++, ContentLine = ""};
             foreach (string line in secondFile)
             {
-                Line l = new Line() { NumberLine = idx + 1, ContentLine = line,  IsLcs = false};
+                Line l = new Line() { NumberLine = idx + 1, ContentLine = line,  IsLcs = false, IsFirst = false};
                 linesSecond[idx++] = l;
             }
 
             //get the matrix with the length of the LCS
             int[,] lengthLcs = GetLengthLcs(linesFirst, linesSecond);
 
-            int [] traceback = TracebackLcs(lengthLcs,  firstFileCount, secondFileCount);
+            int [][] traceback = TracebackLcs(lengthLcs,  firstFileCount, secondFileCount);
             
             SetLcs(traceback, linesFirst, linesSecond);
             
             PrintDiff(linesFirst, linesSecond);
-            //TODO: Print the diff
         }
 
         private static int[,] GetLengthLcs(Line[] linesFirst, Line[] linesSecond)
@@ -116,9 +115,11 @@ namespace mydiff
             return lengthLcs;
         }
 
-        private static int[] TracebackLcs(int[,] lengthLcs, int firstFileCount, int secondFileCount)
+        private static int[][] TracebackLcs(int[,] lengthLcs, int firstFileCount, int secondFileCount)
         {
-            int[] traceback = new Int32[lengthLcs[firstFileCount - 1, secondFileCount -1]];
+            int[][] traceback = new Int32[2][];
+            int[] firstTraceback = new Int32[lengthLcs[firstFileCount-1,secondFileCount-1]];
+            int[] secondTraceback = new Int32[lengthLcs[firstFileCount-1,secondFileCount-1]];
             int actualLcs = 0;
             int indexLcs = 0;
             for (int i = 1; i < firstFileCount; i++)
@@ -127,50 +128,91 @@ namespace mydiff
                 {
                     if (lengthLcs[i, j] > actualLcs)
                     {
-                        traceback[indexLcs++] = i;
+                        firstTraceback[indexLcs] = i;
+                        secondTraceback[indexLcs++] = j;
                         actualLcs = lengthLcs[i, j];
                     }
                 }
             }
 
+            traceback[0] = firstTraceback;
+            traceback[1] = secondTraceback;
             return traceback;
         }
 
-        private static void SetLcs(int[] traceback, Line[] linesFirst, Line[] linesSecond)
+        private static void SetLcs(int[][] traceback, Line[] linesFirst, Line[] linesSecond)
         {
-            foreach (var t in traceback)
+            for (int i = 0; i < traceback.Length; i++)
             {
-                linesFirst[t].IsLcs = true;
-                linesSecond[t].IsLcs = true;
+                for (int j = 0; j < traceback[i].Length; j++)
+                {
+                    if (i == 0)
+                    {
+                        linesFirst[traceback[i][j]].IsLcs = true;
+                    }
+                    else
+                    {
+                        linesSecond[traceback[i][j]].IsLcs = true;
+                    }
+                }
             }
         }
 
         private static void PrintDiff(Line[] linesFirst, Line[] linesSecond)
         {
-            Console.WriteLine("First file");
-            foreach (var line in linesFirst)
+            //obtain which is the longest array
+            Line[] maxLines = linesFirst.Length > linesSecond.Length ? linesFirst : linesSecond;
+            Line[] minLines = maxLines == linesFirst ? linesSecond : linesFirst;
+            
+            for (int i = 1; i < maxLines.Length; i++)
             {
-                if (line.IsLcs)
+                if (maxLines[i].IsLcs)
                 {
-                    Console.WriteLine($"{line.NumberLine}   {line.ContentLine}");
+                    PrintLine(maxLines[i], "none");
+                }
+                else if (minLines.Length <= i)
+                {
+                    if (maxLines[i].IsFirst)
+                    {
+                        PrintLine(maxLines[i], "minus");
+                    }
+                    else
+                    {
+                        PrintLine(maxLines[i], "plus");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"{line.NumberLine} - {line.ContentLine}");
+                    if (maxLines[i].IsFirst)
+                    {
+                        PrintLine(minLines[i], "plus");
+                        PrintLine(maxLines[i], "minus");
+                    }
+                    else
+                    {
+                        PrintLine(maxLines[i], "plus");
+                        PrintLine(minLines[i], "minus");
+                    }
                 }
             }
-            Console.WriteLine("Second file");
-            foreach (var line in linesSecond)
+        }
+
+        private static void PrintLine(Line line, string sign)
+        {
+            Console.Write($"{line.NumberLine} ");
+            if (sign == "minus")
             {
-                if (line.IsLcs)
-                {
-                    Console.WriteLine($"{line.NumberLine}   {line.ContentLine}");
-                }
-                else
-                {
-                    Console.WriteLine($"{line.NumberLine} + {line.ContentLine}");
-                }
+                Console.Write($"-");
             }
+            else if (sign == "plus")
+            {
+                Console.Write($"+");
+            }
+            else
+            {
+                Console.Write($" ");
+            }
+            Console.WriteLine($" {line.ContentLine}");
         }
     }
 }
