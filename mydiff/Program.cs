@@ -56,7 +56,7 @@ namespace mydiff
             linesFirst[idx] = new Line() { NumberLine = idx++, ContentLine = "", };
             foreach (string line in firstFile)
             {
-                Line l = new Line() { NumberLine = idx + 1, ContentLine = line, IsLcs = false, IsFirst = true};
+                Line l = new Line() { NumberLine = idx, ContentLine = line, IsLcs = false, IsFirst = true};
                 linesFirst[idx++] = l;
             }
 
@@ -65,7 +65,7 @@ namespace mydiff
             linesSecond[idx] = new Line() { NumberLine = idx++, ContentLine = ""};
             foreach (string line in secondFile)
             {
-                Line l = new Line() { NumberLine = idx + 1, ContentLine = line,  IsLcs = false, IsFirst = false};
+                Line l = new Line() { NumberLine = idx, ContentLine = line,  IsLcs = false, IsFirst = false};
                 linesSecond[idx++] = l;
             }
 
@@ -185,13 +185,13 @@ namespace mydiff
                 {
                     if (maxLines[i].IsFirst)
                     {
-                        PrintLine(minLines[i], "plus");
                         PrintLine(maxLines[i], "minus");
+                        PrintLine(minLines[i], "plus");
                     }
                     else
                     {
-                        PrintLine(maxLines[i], "plus");
                         PrintLine(minLines[i], "minus");
+                        PrintLine(maxLines[i], "plus");
                     }
                 }
             }
@@ -199,7 +199,14 @@ namespace mydiff
 
         private static void PrintLine(Line line, string sign)
         {
-            Console.Write($"{line.NumberLine} ");
+            if (line.IsFirst)
+            {
+                Console.Write($"{line.NumberLine}   ");
+            }
+            else
+            {
+                Console.Write($"  {line.NumberLine} ");
+            }
             if (sign == "minus")
             {
                 Console.Write($"-");
