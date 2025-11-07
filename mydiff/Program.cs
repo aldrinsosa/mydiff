@@ -199,27 +199,30 @@ namespace mydiff
 
         private static void PrintLine(Line line, string sign)
         {
-            if (line.IsFirst)
+            switch (sign)
             {
-                Console.Write($"{line.NumberLine}   ");
+                case "minus":
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    break;
+                case "plus":
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    break;
             }
-            else
+            Console.Write(line.IsFirst ? $"{line.NumberLine}   " : $"  {line.NumberLine} ");
+            switch (sign)
             {
-                Console.Write($"  {line.NumberLine} ");
-            }
-            if (sign == "minus")
-            {
-                Console.Write($"-");
-            }
-            else if (sign == "plus")
-            {
-                Console.Write($"+");
-            }
-            else
-            {
-                Console.Write($" ");
+                case "minus":
+                    Console.Write($"-");
+                    break;
+                case "plus":
+                    Console.Write($"+");
+                    break;
+                default:
+                    Console.Write($" ");
+                    break;
             }
             Console.WriteLine($" {line.ContentLine}");
+            Console.ResetColor();
         }
     }
 }
