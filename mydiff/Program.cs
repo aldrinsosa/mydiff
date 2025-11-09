@@ -7,7 +7,7 @@ namespace mydiff
     {
         public static void Main(string[] args)
         {
-            if (args.Length < 2)
+            if (args.Length != 2)
             {
                 Console.WriteLine("Usage: mydiff <first_file> <second_file>");
                 return;
@@ -39,7 +39,7 @@ namespace mydiff
 
         private static string [] GetFile(string path, string arg)
         {
-            IEnumerable<string> fileE = null;
+            IEnumerable<string>? fileE = null;
             try
             {
                 fileE = File.ReadLines($"{path}/{arg}");
