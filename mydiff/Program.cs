@@ -13,61 +13,19 @@ namespace mydiff
                 return;
             }
 
-            //set address of the files
+            //set path of the files
             string path = Directory.GetCurrentDirectory();
-            string arg1 = args[0];
-            string arg2 = args[1];
-            IEnumerable<string> firstFileE;
-            IEnumerable<string> secondFileE;
 
-            //read the files
-            try
-            {
-                firstFileE = File.ReadLines($"{path}/{arg1}");
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine(e.Message);
-                return;
-            }
+            //put the content of the files in a array of strings
+            var firstFile = GetFile(path, args[0]);
+            var secondFile = GetFile(path, args[1]);
 
-            try
-            {
-                secondFileE = File.ReadLines($"{path}/{arg2}");
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine(e.Message);
-                return;
-            }
-            
-            var firstFile = firstFileE as string[] ?? firstFileE.ToArray();
-            var secondFile = secondFileE as string[] ?? secondFileE.ToArray();
-           
             // + 1 is for the empty string
-            int firstFileCount = firstFile.Count() + 1; 
+            int firstFileCount = firstFile.Count() + 1;
             int secondFileCount = secondFile.Count() + 1;
-            
-            Line[] linesFirst = new Line[firstFileCount];
-            Line[] linesSecond = new Line[secondFileCount];
-            
-            int idx = 0;
-            //create the empty string for the LCS
-            linesFirst[idx] = new Line() { NumberLine = idx++, ContentLine = "", };
-            foreach (string line in firstFile)
-            {
-                Line l = new Line() { NumberLine = idx, ContentLine = line, IsLcs = false, IsFirst = true};
-                linesFirst[idx++] = l;
-            }
 
-            idx = 0;
-            //create the empty string for the LCS
-            linesSecond[idx] = new Line() { NumberLine = idx++, ContentLine = ""};
-            foreach (string line in secondFile)
-            {
-                Line l = new Line() { NumberLine = idx, ContentLine = line,  IsLcs = false, IsFirst = false};
-                linesSecond[idx++] = l;
-            }
+            Line[] linesFirst = GetLines(firstFile, true, firstFileCount);
+            Line[] linesSecond = GetLines(secondFile, false, secondFileCount);
 
             //get the matrix with the length of the LCS
             int[,] lengthLcs = GetLengthLcs(linesFirst, linesSecond);
@@ -77,6 +35,37 @@ namespace mydiff
             SetLcs(traceback, linesFirst, linesSecond);
             
             PrintDiff(linesFirst, linesSecond);
+        }
+
+        private static string [] GetFile(string path, string arg)
+        {
+            IEnumerable<string> fileE = null;
+            try
+            {
+                fileE = File.ReadLines($"{path}/{arg}");
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.Message);
+                System.Environment.Exit(1);
+            }
+            var file = fileE as string[] ?? fileE.ToArray();
+            return file;
+        }
+
+        private static Line[] GetLines(string[] file, bool isFirst, int fileCount)
+        {
+            Line[] lines = new Line[fileCount];
+
+            int idx = 0;
+            //create the empty string for the LCS
+            lines[idx] = new Line() { NumberLine = idx++, ContentLine = "", };
+            foreach (string line in file)
+            {
+                Line l = new Line() { NumberLine = idx, ContentLine = line, IsLcs = false, IsFirst = isFirst };
+                lines[idx++] = l;
+            }
+            return lines;
         }
 
         private static int[,] GetLengthLcs(Line[] linesFirst, Line[] linesSecond)
