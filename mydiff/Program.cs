@@ -39,6 +39,7 @@ namespace mydiff
 
         private static string [] GetFile(string path, string arg)
         {
+            //initialize the variable so the compiler don't complain
             IEnumerable<string>? fileE = null;
             try
             {
@@ -57,14 +58,17 @@ namespace mydiff
         {
             Line[] lines = new Line[fileCount];
 
+            //start the number line idx
             int idx = 0;
             //create the empty string for the LCS
             lines[idx] = new Line() { NumberLine = idx++, ContentLine = "", };
+            
             foreach (string line in file)
             {
                 Line l = new Line() { NumberLine = idx, ContentLine = line, IsLcs = false, IsFirst = isFirst };
                 lines[idx++] = l;
             }
+            
             return lines;
         }
 
