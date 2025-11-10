@@ -162,7 +162,7 @@ namespace mydiff
             
             for (int i = 1; i < maxLines.Length; i++)
             {
-                if (minLines.Length <= i)
+                if (i >= minLines.Length - 1)
                 {
                     if (maxLines[i].IsLcs)
                     {
