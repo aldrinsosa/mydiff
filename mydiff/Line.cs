@@ -8,4 +8,6 @@ public class Line
     public bool IsLcs{get;set;}
     
     public bool IsFirst { get; set; }
+    
+    public int CounterLine { get; set; }
 }

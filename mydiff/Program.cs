@@ -139,13 +139,16 @@ namespace mydiff
             {
                 for (int j = 0; j < traceback[i].Length; j++)
                 {
+                    //check if are the first or the second lines
                     if (i == 0)
                     {
                         linesFirst[traceback[i][j]].IsLcs = true;
+                        linesFirst[traceback[i][j]].CounterLine = traceback[1][j];
                     }
                     else
                     {
                         linesSecond[traceback[i][j]].IsLcs = true;
+                        linesSecond[traceback[i][j]].CounterLine = traceback[0][j];
                     }
                 }
             }
@@ -159,32 +162,33 @@ namespace mydiff
             
             for (int i = 1; i < maxLines.Length; i++)
             {
-                if (maxLines[i].IsLcs)
+                if (minLines.Length <= i)
                 {
-                    PrintLine(maxLines[i], "none");
-                }
-                else if (minLines.Length <= i)
-                {
-                    if (maxLines[i].IsFirst)
+                    if (maxLines[i].IsLcs)
                     {
-                        PrintLine(maxLines[i], "minus");
+                        PrintLine(maxLines[i], "none");
+                        continue;
                     }
-                    else
-                    {
-                        PrintLine(maxLines[i], "plus");
-                    }
+                    PrintLine(maxLines[i], maxLines[i].IsFirst ? "minus" : "plus");
                 }
                 else
                 {
-                    if (maxLines[i].IsFirst)
+                    if (maxLines[i].IsLcs && minLines[i].IsLcs)
                     {
-                        PrintLine(maxLines[i], "minus");
-                        PrintLine(minLines[i], "plus");
+                        PrintLine(maxLines[i], "none");
                     }
-                    else
+                    else if (minLines[i].IsLcs &&  !(maxLines[i].IsLcs))
+                    {
+                        PrintLine(maxLines[i], "plus");
+                    }
+                    else if (maxLines[i].IsLcs &&  !(minLines[i].IsLcs))
                     {
                         PrintLine(minLines[i], "minus");
-                        PrintLine(maxLines[i], "plus");
+                        PrintLine(maxLines[i], "none");
+                    }
+                    else if (minLines[i].IsLcs)
+                    {
+                        PrintLine(minLines[i], "none");
                     }
                 }
             }
@@ -201,7 +205,15 @@ namespace mydiff
                     Console.ForegroundColor = ConsoleColor.Green;
                     break;
             }
-            Console.Write(line.IsFirst ? $"{line.NumberLine}   " : $"  {line.NumberLine} ");
+
+            if (sign == "none")
+            {
+                Console.Write(line.IsFirst ? $"{line.NumberLine} {line.CounterLine}" : $"{line.CounterLine} {line.NumberLine} ");
+            }
+            else
+            {
+                Console.Write(line.IsFirst ? $"{line.NumberLine}   " : $"  {line.NumberLine} ");   
+            }
             switch (sign)
             {
                 case "minus":
