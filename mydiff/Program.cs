@@ -172,42 +172,23 @@ namespace mydiff
                     PrintLine(maxLines[i], maxLines[i].IsFirst ? "minus" : "plus");
                     continue;
                 }
-                if (maxLines[i].IsLcs && minLines[i].IsLcs)
+                if (linesFirst[i].IsLcs && linesSecond[i].IsLcs)
                 {
-                    PrintLine(maxLines[i], "none");
+                    PrintLine(linesFirst[i], "none");
                 }
-                else if (maxLines[i].IsLcs &&  !(minLines[i].IsLcs))
+                else if (linesFirst[i].IsLcs &&  !(linesSecond[i].IsLcs))
                 {
-                    if (maxLines[i].IsFirst)
-                    {
-                        PrintLine(minLines[i], "plus");
-                        continue;
-                    }
-                    PrintLine(minLines[i], "minus");
-                    PrintLine(maxLines[i], "none");
+                    PrintLine(linesSecond[i], "plus");
                 }
-                else if (!(maxLines[i].IsLcs) &&  minLines[i].IsLcs)
+                else if (!(linesFirst[i].IsLcs) &&  linesSecond[i].IsLcs)
                 {
-                    if (minLines[i].IsFirst)
-                    {
-                        PrintLine(maxLines[i], "plus");
-                        continue;
-                    }
-                    PrintLine(maxLines[i], "minus");
-                    PrintLine(minLines[i], "none");
+                    PrintLine(linesFirst[i], "minus");
+                    PrintLine(linesSecond[i], "none");
                 }
                 else
                 {
-                    if (maxLines[i].IsFirst)
-                    {
-                        PrintLine(maxLines[i], "minus");
-                        PrintLine(minLines[i], "plus");
-                    }
-                    else
-                    {
-                        PrintLine(minLines[i], "minus");
-                        PrintLine(maxLines[i], "plus");
-                    }
+                    PrintLine(linesFirst[i], "minus");
+                    PrintLine(linesSecond[i], "plus");
                 }
             }
         }
