@@ -170,25 +170,43 @@ namespace mydiff
                         continue;
                     }
                     PrintLine(maxLines[i], maxLines[i].IsFirst ? "minus" : "plus");
+                    continue;
+                }
+                if (maxLines[i].IsLcs && minLines[i].IsLcs)
+                {
+                    PrintLine(maxLines[i], "none");
+                }
+                else if (maxLines[i].IsLcs &&  !(minLines[i].IsLcs))
+                {
+                    if (maxLines[i].IsFirst)
+                    {
+                        PrintLine(minLines[i], "plus");
+                        continue;
+                    }
+                    PrintLine(minLines[i], "minus");
+                    PrintLine(maxLines[i], "none");
+                }
+                else if (!(maxLines[i].IsLcs) &&  minLines[i].IsLcs)
+                {
+                    if (minLines[i].IsFirst)
+                    {
+                        PrintLine(maxLines[i], "plus");
+                        continue;
+                    }
+                    PrintLine(maxLines[i], "minus");
+                    PrintLine(minLines[i], "none");
                 }
                 else
                 {
-                    if (maxLines[i].IsLcs && minLines[i].IsLcs)
+                    if (maxLines[i].IsFirst)
                     {
-                        PrintLine(maxLines[i], "none");
+                        PrintLine(maxLines[i], "minus");
+                        PrintLine(minLines[i], "plus");
                     }
-                    else if (minLines[i].IsLcs &&  !(maxLines[i].IsLcs))
-                    {
-                        PrintLine(maxLines[i], "plus");
-                    }
-                    else if (maxLines[i].IsLcs &&  !(minLines[i].IsLcs))
+                    else
                     {
                         PrintLine(minLines[i], "minus");
-                        PrintLine(maxLines[i], "none");
-                    }
-                    else if (minLines[i].IsLcs)
-                    {
-                        PrintLine(minLines[i], "none");
+                        PrintLine(maxLines[i], "plus");
                     }
                 }
             }
