@@ -176,14 +176,14 @@ namespace mydiff
                 {
                     Line.PrintLine(linesFirst[i], "none");
                 }
-                else if (linesFirst[i].IsLcs &&  !(linesSecond[i].IsLcs))
+                else if (linesFirst[i].IsLcs && !(linesSecond[i].IsLcs))
                 {
                     Line.PrintLine(linesSecond[i], "plus");
                 }
-                else if (!(linesFirst[i].IsLcs) &&  linesSecond[i].IsLcs)
+                else if (!(linesFirst[i].IsLcs) && linesSecond[i].IsLcs)
                 {
+                    if (linesSecond.Length - 1 >= linesSecond[i].CounterLine) { Line.PrintLine(linesSecond[i], "none"); }
                     Line.PrintLine(linesFirst[i], "minus");
-                    Line.PrintLine(linesSecond[i], "none");
                 }
                 else
                 {
