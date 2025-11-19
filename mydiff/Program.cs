@@ -182,7 +182,18 @@ namespace mydiff
                 }
                 else if (!(linesFirst[i].IsLcs) && linesSecond[i].IsLcs)
                 {
-                    if (linesSecond.Length - 1 >= linesSecond[i].CounterLine) { Line.PrintLine(linesSecond[i], "none"); }
+                    if (linesSecond.Length - 1 >= linesSecond[i].CounterLine) {
+                        if (linesFirst[i].NumberLine > linesSecond[i].CounterLine) {
+                            Line.PrintLine(linesSecond[i], "none");
+                            Line.PrintLine(linesFirst[i], "minus");
+                        }
+                        else
+                        {
+                            Line.PrintLine(linesFirst[i], "minus");
+                            Line.PrintLine(linesSecond[i], "none");
+                        }
+                        continue;
+                    }
                     Line.PrintLine(linesFirst[i], "minus");
                 }
                 else
