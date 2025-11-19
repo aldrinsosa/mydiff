@@ -166,67 +166,31 @@ namespace mydiff
                 {
                     if (maxLines[i].IsLcs)
                     {
-                        PrintLine(maxLines[i], "none");
+                        Line.PrintLine(maxLines[i], "none");
                         continue;
                     }
-                    PrintLine(maxLines[i], maxLines[i].IsFirst ? "minus" : "plus");
+                    Line.PrintLine(maxLines[i], maxLines[i].IsFirst ? "minus" : "plus");
                     continue;
                 }
                 if (linesFirst[i].IsLcs && linesSecond[i].IsLcs)
                 {
-                    PrintLine(linesFirst[i], "none");
+                    Line.PrintLine(linesFirst[i], "none");
                 }
                 else if (linesFirst[i].IsLcs &&  !(linesSecond[i].IsLcs))
                 {
-                    PrintLine(linesSecond[i], "plus");
+                    Line.PrintLine(linesSecond[i], "plus");
                 }
                 else if (!(linesFirst[i].IsLcs) &&  linesSecond[i].IsLcs)
                 {
-                    PrintLine(linesFirst[i], "minus");
-                    PrintLine(linesSecond[i], "none");
+                    Line.PrintLine(linesFirst[i], "minus");
+                    Line.PrintLine(linesSecond[i], "none");
                 }
                 else
                 {
-                    PrintLine(linesFirst[i], "minus");
-                    PrintLine(linesSecond[i], "plus");
+                    Line.PrintLine(linesFirst[i], "minus");
+                    Line.PrintLine(linesSecond[i], "plus");
                 }
             }
-        }
-
-        private static void PrintLine(Line line, string sign)
-        {
-            switch (sign)
-            {
-                case "minus":
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    break;
-                case "plus":
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    break;
-            }
-
-            if (sign == "none")
-            {
-                Console.Write(line.IsFirst ? $"{line.NumberLine} {line.CounterLine}" : $"{line.CounterLine} {line.NumberLine} ");
-            }
-            else
-            {
-                Console.Write(line.IsFirst ? $"{line.NumberLine}   " : $"  {line.NumberLine} ");   
-            }
-            switch (sign)
-            {
-                case "minus":
-                    Console.Write($"-");
-                    break;
-                case "plus":
-                    Console.Write($"+");
-                    break;
-                default:
-                    Console.Write($" ");
-                    break;
-            }
-            Console.WriteLine($" {line.ContentLine}");
-            Console.ResetColor();
         }
     }
 }
